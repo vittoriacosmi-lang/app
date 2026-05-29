@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg1:#1a0f2e;--bg2:#2d1b4e;--bg3:#0a0518;
+  --glow:#c084fc;--glow2:#f0abfc;--glow3:#fbbf24;
+  --text:#fff;--muted:rgba(255,255,255,.55)
+}
+html,body{height:100%;overflow:hidden;font-family:'Fredoka',sans-serif;color:var(--text);user-select:none;-webkit-user-select:none}
+body{background:radial-gradient(ellipse at top,#2d1b4e 0%,#1a0f2e 40%,#0a0518 100%);position:relative}
+
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite}
+@keyframes twinkle{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+
+#root{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;z-index:1}
+
+.view{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .5s}
+.view.on{opacity:1;pointer-events:auto}
+
+#setup .box{background:rgba(255,255,255,.08);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:1.6rem;width:100%;max-width:380px;display:flex;flex-direction:column;gap:1rem}
+#setup label{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+#setup input{width:100%;padding:13px 16px;background:rgba(0,0,0,.3);border:1.5px solid rgba(255,255,255,.1);border-radius:14px;color:#fff;font-family:'Fredoka',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+#setup input:focus{border-color:var(--glow)}
+.go{padding:14px;border-radius:30px;border:none;background:linear-gradient(135deg,var(--glow),var(--glow2));color:#1a0f2e;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 8px 24px rgba(192,132,252,.4);transition:transform .15s}
+.go:active{transform:scale(.96)}
+.hint-small{font-size:.7rem;color:var(--muted);text-align:center;line-height:1.5;margin-top:.4rem}
+.hint-small a{color:var(--glow2)}
+
+.portal{width:min(78vmin,420px);height:min(78vmin,420px);border-radius:50%;position:relative;overflow:hidden;border:6px solid transparent;background:radial-gradient(circle,#fff 0%,#fff 100%) padding-box,conic-gradient(from 0deg,var(--glow),var(--glow2),var(--glow3),var(--glow)) border-box;box-shadow:0 0 60px rgba(192,132,252,.5),inset 0 0 0 2px rgba(255,255,255,.3);animation:portalspin 8s linear infinite}
+@keyframes portalspin{to{background:radial-gradient(circle,#fff 0%,#fff 100%) padding-box,conic-gradient(from 360deg,var(--glow),var(--glow2),var(--glow3),var(--glow)) border-box}}
+.portal-inner{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:#000}
+.portal-inner video,.portal-inner img,.portal-inner canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+
+#camView video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+.controls{position:absolute;bottom:6vh;display:flex;flex-direction:column;align-items:center;gap:1rem;z-index:10}
+.shutter{width:84px;height:84px;border-radius:50%;background:#fff;border:5px solid rgba(255,255,255,.3);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(255,255,255,.4);transition:transform .15s}
+.shutter:active{transform:scale(.9)}
+.shutter-inner{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#fff,#f0abfc)}
+.upload-btn{color:rgba(255,255,255,.6);font-size:.85rem;font-weight:600;cursor:pointer;text-decoration:underline}
+
+.bubble{position:absolute;background:rgba(255,255,255,.95);color:#1a0f2e;border-radius:24px;padding:1rem 1.4rem;font-weight:600;font-size:1.05rem;box-shadow:0 12px 40px rgba(0,0,0,.3);max-width:80vw;text-align:center;animation:bubblepop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes bubblepop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.bubble::before{content:'';position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:14px solid rgba(255,255,255,.95)}
+
+.mic-big{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--glow),var(--glow2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:3rem;box-shadow:0 0 60px rgba(192,132,252,.6);transition:transform .15s;position:relative}
+.mic-big:active{transform:scale(.94)}
+.mic-big.rec{background:linear-gradient(135deg,#f87171,#ef4444);animation:micpulse 1s infinite}
+@keyframes micpulse{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,.7)}50%{box-shadow:0 0 0 30px rgba(248,113,113,0)}}
+.mic-wave{position:absolute;inset:0;border-radius:50%;border:3px solid var(--glow);animation:wave 1.5s infinite;opacity:0}
+.mic-big.rec .mic-wave{opacity:1}
+@keyframes wave{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.8);opacity:0}}
+
+.heard-text{background:rgba(255,255,255,.12);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:1.2rem 1.5rem;max-width:90vw;width:380px;text-align:center;font-size:1.15rem;font-weight:500;min-height:60px;display:flex;align-items:center;justify-content:center}
+
+.action-row{display:flex;gap:1rem;margin-top:1rem}
+.act-btn{padding:14px 28px;border-radius:30px;border:none;font-family:'Fredoka',sans-serif;font-weight:600;font-size:1rem;cursor:pointer;transition:transform .15s;display:flex;align-items:center;gap:8px}
+.act-btn:active{transform:scale(.94)}
+.act-ok{background:linear-gradient(135deg,#34d399,#10b981);color:#fff;box-shadow:0 8px 24px rgba(52,211,153,.4)}
+.act-redo{background:rgba(255,255,255,.15);color:#fff;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2)}
+
+.progress-text{position:absolute;bottom:7vh;font-size:1.05rem;font-weight:500;color:#fff;text-align:center;animation:fadeUpDown 2s infinite;max-width:90vw}
+@keyframes fadeUpDown{0%,100%{opacity:.6;transform:translateY(2px)}50%{opacity:1;transform:translateY(-2px)}}
+
+.particles{position:absolute;inset:0;pointer-events:none}
+.particle{position:absolute;width:6px;height:6px;background:var(--glow2);border-radius:50%;opacity:0;animation:particle-float 3s infinite}
+@keyframes particle-float{0%{opacity:0;transform:translateY(20px) scale(0)}30%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(.5)}}
+
+.title-name{font-size:1.6rem;font-weight:700;background:linear-gradient(135deg,var(--glow2),var(--glow3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;animation:titleFloat 3s ease-in-out infinite}
+@keyframes titleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+.replay-btn{margin-top:1.5rem;padding:12px 24px;border-radius:24px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Fredoka',sans-serif;font-weight:600;cursor:pointer;font-size:.92rem;backdrop-filter:blur(10px)}
+.replay-btn:active{transform:scale(.94)}
+
+.err-toast{position:absolute;bottom:3vh;background:rgba(248,113,113,.95);color:#fff;border-radius:18px;padding:10px 18px;font-size:.85rem;font-weight:500;max-width:85vw;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.3);display:none;z-index:100}
+.err-toast.on{display:block;animation:bubblepop .3s}
+
+#tts-replay{position:absolute;top:3vh;right:3vh;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);cursor:pointer;display:none;align-items:center;justify-content:center;font-size:1.3rem;color:#fff}
+#tts-replay.on{display:flex}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+
+<div id="root">
+
+<!-- SETUP -->
+<div class="view on" id="vSetup">
+  <div class="box">
+    <div>
+      <label>chiave fal.ai</label>
+      <input type="password" id="fkey" placeholder="..." autocomplete="off">
+    </div>
+    <button class="go" onclick="boot()">Inizia il viaggio ✨</button>
+    <p class="hint-small">
+      Ottieni la chiave su <a href="https://fal.ai/dashboard/keys" target="_blank">fal.ai/dashboard/keys</a>
+    </p>
+  </div>
+</div>
+
+<!-- CAMERA -->
+<div class="view" id="vCam">
+  <button onclick="clearKeys()" style="position:absolute;top:3vh;right:3vh;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:20" title="Cambia chiave">⚙</button>
+  <div class="portal">
+    <div class="portal-inner">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="canvas" style="display:none"></canvas>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="shutter" onclick="snap()"><div class="shutter-inner"></div></button>
+    <label class="upload-btn" for="fin">scegli dal dispositivo</label>
+    <input type="file" id="fin" accept="image/*" style="display:none" onchange="fromFile(event)">
+  </div>
+</div>
+
+<!-- VOICE QUESTION -->
+<div class="view" id="vVoice">
+  <div class="portal" style="margin-bottom:2rem">
+    <div class="portal-inner"><img id="capPreview" alt=""></div>
+  </div>
+  <div class="bubble" id="voiceBubble" style="margin-bottom:2rem;position:relative">Che cos'è questo? 🎨</div>
+  <button class="mic-big" id="micBtn" onclick="toggleMic()">
+    🎤<div class="mic-wave"></div>
+  </button>
+  <div class="heard-text" id="heardText" style="margin-top:1.5rem;display:none">...</div>
+  <input type="text" id="textFallback" placeholder="oppure scrivi qui..." style="margin-top:1rem;width:280px;max-width:80vw;padding:12px 16px;border-radius:18px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-family:'Fredoka',sans-serif;font-size:.95rem;text-align:center;outline:none;backdrop-filter:blur(10px)" oninput="onTextType(this.value)">
+  <div class="action-row" id="voiceActions" style="display:none">
+    <button class="act-btn act-redo" onclick="resetVoice()">↻ Riprova</button>
+    <button class="act-btn act-ok" onclick="confirmVoice()">✓ È giusto!</button>
+  </div>
+  <button id="tts-replay" onclick="speakQuestion()">🔊</button>
+</div>
+
+<!-- PROCESSING -->
+<div class="view" id="vProc">
+  <div class="portal">
+    <div class="portal-inner" id="procPortal">
+      <img id="procImg" alt="">
+    </div>
+  </div>
+  <div class="progress-text" id="progText">scansione del disegno...</div>
+  <div class="particles" id="particles"></div>
+</div>
+
+<!-- RESULT -->
+<div class="view" id="vResult">
+  <div class="title-name" id="resultName">✨</div>
+  <div class="portal">
+    <div class="portal-inner" id="resultPortal">
+      <video id="resVideo" autoplay loop muted playsinline style="display:none"></video>
+      <img id="resImg" alt="">
+    </div>
+  </div>
+  <button class="replay-btn" onclick="resetAll()">↻ Nuovo disegno</button>
+</div>
+
+</div>
+
+<div class="err-toast" id="errToast"></div>
+
+<script>
+let FKEY='';
+let capturedB64=null,drawingUploadedUrl=null,img3dUrl=null,voiceTranscript='';
+let cam=null,recog=null,isRec=false;
+
+// Stars
+function makeStars(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<60;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    s.style.left=Math.random()*100+'%';
+    s.style.top=Math.random()*100+'%';
+    const sz=Math.random()*2+1;
+    s.style.width=sz+'px';s.style.height=sz+'px';
+    s.style.animationDelay=Math.random()*3+'s';
+    c.appendChild(s);
+  }
+}
+makeStars();
+
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+function showErr(msg){
+  const t=document.getElementById('errToast');
+  t.textContent=msg;t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),15000);
+}
+
+// Save key
+function boot(){
+  FKEY=document.getElementById('fkey').value.trim();
+  if(!FKEY){showErr('Inserisci la chiave Fal.ai');return;}
+  try{localStorage.setItem('draw3d_fkey',FKEY);}catch(e){}
+  showView('vCam');
+  initCam();
+}
+
+function tryAutoStart(){
+  try{
+    const fk=localStorage.getItem('draw3d_fkey');
+    if(fk){
+      FKEY=fk;
+      document.getElementById('fkey').value=fk;
+      showView('vCam');
+      initCam();
+    }
+  }catch(e){}
+}
+
+function clearKeys(){
+  try{localStorage.removeItem('draw3d_fkey');}catch(e){}
+  document.getElementById('fkey').value='';
+  FKEY='';
+  showView('vSetup');
+}
+
+tryAutoStart();
+
+// Camera
+async function initCam(){
+  try{
+    cam=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280}}});
+    document.getElementById('video').srcObject=cam;
+  }catch(e){}
+}
+function stopCam(){if(cam){cam.getTracks().forEach(t=>t.stop());cam=null;}}
+
+function snap(){
+  const v=document.getElementById('video'),c=document.getElementById('canvas');
+  c.width=v.videoWidth||640;c.height=v.videoHeight||480;
+  c.getContext('2d').drawImage(v,0,0);
+  stopCam();
+  go(c.toDataURL('image/jpeg',.92));
+}
+function fromFile(e){
+  const f=e.target.files[0];if(!f)return;
+  stopCam();
+  const r=new FileReader();
+  r.onload=ev=>go(ev.target.result);
+  r.readAsDataURL(f);
+}
+function go(url){
+  capturedB64=url;
+  document.getElementById('capPreview').src=url;
+  showView('vVoice');
+  document.getElementById('tts-replay').classList.add('on');
+  setTimeout(speakQuestion,400);
+}
+
+// TTS
+function speakQuestion(){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance("Che cos'è questo? Dimmelo!");
+  u.lang='it-IT';u.rate=.95;u.pitch=1.1;
+  speechSynthesis.speak(u);
+}
+function speakConfirm(text){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance("Ho capito: "+text+". È giusto?");
+  u.lang='it-IT';u.rate=.95;u.pitch=1.1;
+  speechSynthesis.speak(u);
+}
+
+// Voice
+function toggleMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const btn=document.getElementById('micBtn');
+  if(!SR){
+    showErr('Microfono non disponibile — scrivi sotto');
+    document.getElementById('textFallback').focus();
+    return;
+  }
+  if(!isRec){
+    try{
+      recog=new SR();
+      recog.lang='it-IT';recog.continuous=true;recog.interimResults=true;
+      document.getElementById('heardText').style.display='flex';
+      document.getElementById('heardText').textContent='in ascolto...';
+      recog.onresult=e=>{
+        let t='';
+        for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;
+        voiceTranscript=t;
+        document.getElementById('heardText').textContent='"'+t+'"';
+        document.getElementById('textFallback').value=t;
+      };
+      recog.onerror=ev=>{
+        isRec=false;
+        btn.innerHTML='🎤<div class="mic-wave"></div>';
+        btn.classList.remove('rec');
+        showErr('Microfono: '+ev.error+' — scrivi sotto');
+        document.getElementById('textFallback').focus();
+      };
+      recog.onend=()=>{
+        isRec=false;
+        btn.innerHTML='🎤<div class="mic-wave"></div>';
+        btn.classList.remove('rec');
+        if(voiceTranscript.trim()){
+          document.getElementById('voiceActions').style.display='flex';
+          speakConfirm(voiceTranscript);
+        }
+      };
+      recog.start();
+      isRec=true;
+      btn.innerHTML='⏹<div class="mic-wave"></div>';
+      btn.classList.add('rec');
+      voiceTranscript='';
+      document.getElementById('voiceActions').style.display='none';
+    }catch(e){
+      showErr('Errore microfono — scrivi sotto');
+      document.getElementById('textFallback').focus();
+    }
+  }else{
+    try{recog?.stop();}catch(e){}
+  }
+}
+
+function onTextType(val){
+  voiceTranscript=val.trim();
+  if(voiceTranscript.length>1){
+    document.getElementById('heardText').style.display='flex';
+    document.getElementById('heardText').textContent='"'+voiceTranscript+'"';
+    document.getElementById('voiceActions').style.display='flex';
+  }else{
+    document.getElementById('voiceActions').style.display='none';
+  }
+}
+
+function resetVoice(){
+  voiceTranscript='';
+  document.getElementById('heardText').style.display='none';
+  document.getElementById('voiceActions').style.display='none';
+  document.getElementById('textFallback').value='';
+  speakQuestion();
+}
+
+function confirmVoice(){
+  speechSynthesis?.cancel();
+  showView('vProc');
+  document.getElementById('procImg').src=capturedB64;
+  runPipeline();
+}
+
+// Progress
+function setProgress(text){document.getElementById('progText').textContent=text;}
+
+function spawnParticles(){
+  const c=document.getElementById('particles');
+  c.innerHTML='';
+  for(let i=0;i<30;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.style.left=(Math.random()*100)+'%';
+    p.style.bottom=Math.random()*50+'%';
+    p.style.animationDelay=(Math.random()*3)+'s';
+    p.style.background=['#c084fc','#f0abfc','#fbbf24'][i%3];
+    c.appendChild(p);
+  }
+}
+
+async function runPipeline(){
+  try{
+    setProgress('🔍 sto guardando il tuo disegno...');
+    spawnParticles();
+    await uploadDrawing();
+
+    setProgress('✨ sto dando volume al disegno...');
+    const img=document.getElementById('procImg');
+    img.style.transition='filter 1.5s, transform 1.5s';
+    img.style.filter='blur(2px) saturate(1.3)';
+    img.style.transform='scale(1.05)';
+
+    await render3d();
+
+    setProgress('💫 ecco fatto...');
+    img.style.transition='opacity .8s';
+    img.style.opacity='0';
+    await new Promise(r=>setTimeout(r,800));
+    img.src=img3dUrl;
+    img.style.filter='none';
+    img.style.transform='scale(1)';
+    img.style.opacity='1';
+    await new Promise(r=>setTimeout(r,1500));
+
+    setProgress('🎬 lo sto animando...');
+    const videoUrl=await generateVideo();
+
+    if(voiceTranscript)document.getElementById('resultName').textContent=voiceTranscript;
+    else document.getElementById('resultName').textContent='✨';
+    document.getElementById('resImg').src=img3dUrl;
+    const vid=document.getElementById('resVideo');
+    vid.src=videoUrl;
+    vid.style.display='block';
+    document.getElementById('resImg').style.display='none';
+    showView('vResult');
+  }catch(e){
+    const msg=e.message||'Qualcosa è andato storto';
+    showErr(msg);
+    setProgress('⚠ '+msg);
+  }
+}
+
+// Upload drawing to fal storage
+async function uploadDrawing(){
+  if(!FKEY)throw new Error('Chiave Fal.ai mancante');
+  const imgBlob=await(await fetch(capturedB64)).blob();
+  const fd=new FormData();
+  fd.append('file',imgBlob,'drawing.jpg');
+  const up=await fetch('https://rest.alpha.fal.ai/storage/upload',{
+    method:'POST',
+    headers:{'Authorization':'Key '+FKEY.trim()},
+    body:fd
+  });
+  if(!up.ok){
+    const t=await up.text();
+    throw new Error('Upload: '+up.status+' '+t.slice(0,100));
+  }
+  const d=await up.json();
+  drawingUploadedUrl=d.access_url||d.url;
+  if(!drawingUploadedUrl)throw new Error('URL upload mancante');
+}
+
+// 3D render via Flux Kontext (image-to-image with strong source preservation)
+async function render3d(){
+  const userPart=voiceTranscript?` This drawing represents: "${voiceTranscript}".`:'';
+  const prompt=`Transform this exact child's drawing into a 3D version, keeping it 100% faithful to the original. Preserve every line, every wobble, every color, every imperfect proportion EXACTLY as drawn. Just add subtle volume, soft shadow and clay-like material as if the drawing was lifted slightly from the paper into a small soft toy. Do not redesign, do not beautify, do not change any feature. Keep the naive child art style completely intact.${userPart} White background.`;
+
+  const res=await fetch('https://fal.run/fal-ai/flux-pro/kontext',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Key '+FKEY.trim()},
+    body:JSON.stringify({
+      prompt:prompt,
+      image_url:drawingUploadedUrl,
+      guidance_scale:3.5,
+      num_inference_steps:28,
+      aspect_ratio:'1:1'
+    })
+  });
+  const txt=await res.text();
+  if(!res.ok)throw new Error('Render: HTTP '+res.status+' '+txt.slice(0,120));
+  let data;try{data=JSON.parse(txt);}catch{throw new Error('Render risposta non valida');}
+  img3dUrl=data?.images?.[0]?.url||data?.image?.url||data?.url;
+  if(!img3dUrl)throw new Error('Render URL mancante');
+}
+
+// Video
+async function generateVideo(){
+  const voicePart=voiceTranscript?` It is: "${voiceTranscript}".`:'';
+  const prompt=`Gentle animation of a child's drawing coming to life as a soft toy.${voicePart} Smooth motion, child-friendly, keep the character exactly as drawn.`;
+  const res=await fetch('https://fal.run/fal-ai/kling-video/v1.6/standard/image-to-video',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Key '+FKEY.trim()},
+    body:JSON.stringify({image_url:img3dUrl,prompt:prompt,duration:'5',aspect_ratio:'1:1'})
+  });
+  const txt=await res.text();
+  if(!res.ok)throw new Error('Video: HTTP '+res.status+' '+txt.slice(0,120));
+  let data;try{data=JSON.parse(txt);}catch{throw new Error('Video risposta non valida');}
+  const url=data?.video?.url||data?.output?.video?.url||data?.outputs?.[0]?.url||data?.url;
+  if(!url)throw new Error('Video URL mancante');
+  return url;
+}
+
+function resetAll(){
+  capturedB64=null;drawingUploadedUrl=null;img3dUrl=null;voiceTranscript='';
+  document.getElementById('resVideo').style.display='none';
+  document.getElementById('resVideo').src='';
+  document.getElementById('resImg').style.display='block';
+  document.getElementById('heardText').style.display='none';
+  document.getElementById('voiceActions').style.display='none';
+  document.getElementById('textFallback').value='';
+  document.getElementById('procImg').style.opacity='1';
+  document.getElementById('procImg').style.filter='none';
+  document.getElementById('procImg').style.transform='scale(1)';
+  document.getElementById('tts-replay').classList.remove('on');
+  showView('vCam');
+  initCam();
+}
+</script>
+</body>
+</html>
