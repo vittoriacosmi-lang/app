@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg1:#1a0f2e;--bg2:#2d1b4e;--bg3:#0a0518;
+  --glow:#c084fc;--glow2:#f0abfc;--glow3:#fbbf24;
+  --text:#fff;--muted:rgba(255,255,255,.55)
+}
+html,body{height:100%;overflow:hidden;font-family:'Fredoka',sans-serif;color:var(--text);user-select:none;-webkit-user-select:none}
+body{background:radial-gradient(ellipse at top,#2d1b4e 0%,#1a0f2e 40%,#0a0518 100%);position:relative}
+
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite}
+@keyframes twinkle{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+
+#root{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;z-index:1}
+
+.view{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .5s}
+.view.on{opacity:1;pointer-events:auto}
+
+/* SETUP */
+#setup .box{background:rgba(255,255,255,.08);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:1.6rem;width:100%;max-width:380px;display:flex;flex-direction:column;gap:1rem}
+#setup label{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+#setup input{width:100%;padding:13px 16px;background:rgba(0,0,0,.3);border:1.5px solid rgba(255,255,255,.1);border-radius:14px;color:#fff;font-family:'Fredoka',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+#setup input:focus{border-color:var(--glow)}
+.go{padding:14px;border-radius:30px;border:none;background:linear-gradient(135deg,var(--glow),var(--glow2));color:#1a0f2e;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 8px 24px rgba(192,132,252,.4);transition:transform .15s}
+.go:active{transform:scale(.96)}
+.hint-small{font-size:.7rem;color:var(--muted);text-align:center;line-height:1.5;margin-top:.4rem}
+.hint-small a{color:var(--glow2)}
+
+/* PORTAL */
+.portal{width:min(75vmin,400px);height:min(75vmin,400px);border-radius:50%;position:relative;overflow:hidden;border:6px solid transparent;background:radial-gradient(circle,#fff 0%,#fff 100%) padding-box,conic-gradient(from 0deg,var(--glow),var(--glow2),var(--glow3),var(--glow)) border-box;box-shadow:0 0 60px rgba(192,132,252,.5),inset 0 0 0 2px rgba(255,255,255,.3);animation:portalspin 8s linear infinite}
+@keyframes portalspin{to{background:radial-gradient(circle,#fff 0%,#fff 100%) padding-box,conic-gradient(from 360deg,var(--glow),var(--glow2),var(--glow3),var(--glow)) border-box}}
+.portal-inner{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:#000}
+.portal-inner video,.portal-inner img,.portal-inner canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+
+#camView video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* CAMERA CONTROLS */
+.controls{position:absolute;bottom:5vh;display:flex;flex-direction:column;align-items:center;gap:1rem;z-index:10}
+.shutter{width:84px;height:84px;border-radius:50%;background:#fff;border:5px solid rgba(255,255,255,.3);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(255,255,255,.4);transition:transform .15s}
+.shutter:active{transform:scale(.9)}
+.shutter-inner{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#fff,#f0abfc)}
+.upload-btn{color:rgba(255,255,255,.6);font-size:.85rem;font-weight:600;cursor:pointer;text-decoration:underline}
+
+/* COG */
+.cog{position:absolute;top:3vh;right:3vh;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:20}
+
+/* ACTION WHEEL */
+.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:1.5rem;max-width:340px;width:100%;padding:0 1rem}
+.action-card{aspect-ratio:1;background:rgba(255,255,255,.08);backdrop-filter:blur(20px);border:2px solid rgba(255,255,255,.15);border-radius:20px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:transform .15s,border-color .2s,background .2s}
+.action-card:active{transform:scale(.92)}
+.action-card:hover{border-color:var(--glow);background:rgba(192,132,252,.15)}
+.action-card .ico{font-size:2.3rem;line-height:1}
+.action-card .lbl{font-size:.78rem;font-weight:600;color:#fff;text-align:center}
+
+/* PROCESSING */
+.progress-text{position:absolute;bottom:7vh;font-size:1.05rem;font-weight:500;color:#fff;text-align:center;animation:fadeUpDown 2s infinite;max-width:90vw}
+@keyframes fadeUpDown{0%,100%{opacity:.6;transform:translateY(2px)}50%{opacity:1;transform:translateY(-2px)}}
+.particles{position:absolute;inset:0;pointer-events:none}
+.particle{position:absolute;width:6px;height:6px;background:var(--glow2);border-radius:50%;opacity:0;animation:particle-float 3s infinite}
+@keyframes particle-float{0%{opacity:0;transform:translateY(20px) scale(0)}30%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(.5)}}
+
+/* RESULT */
+.replay-btn{margin-top:1.5rem;padding:12px 24px;border-radius:24px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Fredoka',sans-serif;font-weight:600;cursor:pointer;font-size:.92rem;backdrop-filter:blur(10px)}
+.replay-btn:active{transform:scale(.94)}
+
+.err-toast{position:absolute;bottom:3vh;background:rgba(248,113,113,.95);color:#fff;border-radius:18px;padding:10px 18px;font-size:.85rem;font-weight:500;max-width:85vw;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.3);display:none;z-index:100}
+.err-toast.on{display:block}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+
+<div id="root">
+
+<!-- SETUP -->
+<div class="view on" id="vSetup">
+  <div class="box">
+    <div>
+      <label>chiave fal.ai</label>
+      <input type="password" id="fkey" placeholder="..." autocomplete="off">
+    </div>
+    <button class="go" onclick="boot()">Inizia ✨</button>
+    <p class="hint-small">
+      <a href="https://fal.ai/dashboard/keys" target="_blank">fal.ai/dashboard/keys</a>
+    </p>
+  </div>
+</div>
+
+<!-- CAMERA -->
+<div class="view" id="vCam">
+  <button class="cog" onclick="clearKeys()">⚙</button>
+  <div class="portal">
+    <div class="portal-inner">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="canvas" style="display:none"></canvas>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="shutter" onclick="snap()"><div class="shutter-inner"></div></button>
+    <label class="upload-btn" for="fin">scegli dal dispositivo</label>
+    <input type="file" id="fin" accept="image/*" style="display:none" onchange="fromFile(event)">
+  </div>
+</div>
+
+<!-- ACTION SELECT -->
+<div class="view" id="vAction">
+  <div class="portal" style="width:min(50vmin,260px);height:min(50vmin,260px)">
+    <div class="portal-inner"><img id="capPreview" alt=""></div>
+  </div>
+  <div class="action-grid" id="actionGrid"></div>
+</div>
+
+<!-- PROCESSING -->
+<div class="view" id="vProc">
+  <div class="portal">
+    <div class="portal-inner"><img id="procImg" alt=""></div>
+  </div>
+  <div class="progress-text" id="progText">animazione in corso...</div>
+  <div class="particles" id="particles"></div>
+</div>
+
+<!-- RESULT -->
+<div class="view" id="vResult">
+  <div class="portal">
+    <div class="portal-inner">
+      <video id="resVideo" autoplay loop muted playsinline></video>
+    </div>
+  </div>
+  <button class="replay-btn" onclick="resetAll()">↻ Nuovo disegno</button>
+</div>
+
+</div>
+
+<div class="err-toast" id="errToast"></div>
+
+<script>
+const ACTIONS=[
+  {ico:'🚶',lbl:'Cammina',prompt:'walks gently across the scene with smooth steady steps'},
+  {ico:'🏃',lbl:'Corre',prompt:'runs joyfully across the scene with energetic movement'},
+  {ico:'🦘',lbl:'Salta',prompt:'jumps up and down repeatedly with bouncy energy'},
+  {ico:'💃',lbl:'Balla',prompt:'dances happily moving side to side with rhythm'},
+  {ico:'🕺',lbl:'Si gira',prompt:'spins and rotates in place gracefully'},
+  {ico:'✈️',lbl:'Vola',prompt:'flies smoothly through the air with floating motion'},
+  {ico:'👋',lbl:'Saluta',prompt:'waves hello cheerfully and smiles'},
+  {ico:'😴',lbl:'Dorme',prompt:'breathes peacefully and sleeps with gentle motion'},
+  {ico:'🎉',lbl:'Festeggia',prompt:'celebrates jumping with arms up confetti everywhere'}
+];
+
+let FKEY='';
+let capturedB64=null,cam=null;
+
+function makeStars(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<60;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    s.style.left=Math.random()*100+'%';
+    s.style.top=Math.random()*100+'%';
+    const sz=Math.random()*2+1;
+    s.style.width=sz+'px';s.style.height=sz+'px';
+    s.style.animationDelay=Math.random()*3+'s';
+    c.appendChild(s);
+  }
+}
+makeStars();
+
+function buildActions(){
+  const grid=document.getElementById('actionGrid');
+  grid.innerHTML='';
+  ACTIONS.forEach((a,i)=>{
+    const card=document.createElement('div');
+    card.className='action-card';
+    card.innerHTML=`<div class="ico">${a.ico}</div><div class="lbl">${a.lbl}</div>`;
+    card.onclick=()=>chooseAction(a);
+    grid.appendChild(card);
+  });
+}
+buildActions();
+
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+function showErr(msg){
+  const t=document.getElementById('errToast');
+  t.textContent=msg;t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),12000);
+}
+
+function boot(){
+  FKEY=document.getElementById('fkey').value.trim();
+  if(!FKEY){showErr('Inserisci la chiave Fal.ai');return;}
+  showView('vCam');
+  initCam();
+}
+
+function clearKeys(){
+  document.getElementById('fkey').value='';
+  FKEY='';
+  showView('vSetup');
+}
+
+try{localStorage.removeItem('draw3d_fkey');localStorage.removeItem('draw3d_okey');}catch(e){}
+
+async function initCam(){
+  try{
+    cam=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280}}});
+    document.getElementById('video').srcObject=cam;
+  }catch(e){}
+}
+function stopCam(){if(cam){cam.getTracks().forEach(t=>t.stop());cam=null;}}
+
+function snap(){
+  const v=document.getElementById('video'),c=document.getElementById('canvas');
+  c.width=v.videoWidth||640;c.height=v.videoHeight||480;
+  c.getContext('2d').drawImage(v,0,0);
+  stopCam();
+  go(c.toDataURL('image/jpeg',.92));
+}
+function fromFile(e){
+  const f=e.target.files[0];if(!f)return;
+  stopCam();
+  const r=new FileReader();
+  r.onload=ev=>go(ev.target.result);
+  r.readAsDataURL(f);
+}
+function go(url){
+  capturedB64=url;
+  document.getElementById('capPreview').src=url;
+  showView('vAction');
+}
+
+function spawnParticles(){
+  const c=document.getElementById('particles');
+  c.innerHTML='';
+  for(let i=0;i<30;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.style.left=(Math.random()*100)+'%';
+    p.style.bottom=Math.random()*50+'%';
+    p.style.animationDelay=(Math.random()*3)+'s';
+    p.style.background=['#c084fc','#f0abfc','#fbbf24'][i%3];
+    c.appendChild(p);
+  }
+}
+
+async function chooseAction(action){
+  showView('vProc');
+  document.getElementById('procImg').src=capturedB64;
+  document.getElementById('progText').textContent=`Sto facendo: ${action.lbl.toLowerCase()}...`;
+  spawnParticles();
+
+  try{
+    const videoUrl=await generateVideo(action.prompt);
+    document.getElementById('resVideo').src=videoUrl;
+    showView('vResult');
+  }catch(e){
+    showErr('Errore: '+(e.message||'')); 
+    document.getElementById('progText').textContent='⚠ '+e.message;
+  }
+}
+
+async function generateVideo(actionPrompt){
+  const prompt=`The character in the drawing ${actionPrompt}. Keep the drawing exactly as it is, just animate the character with this motion. Child-friendly, smooth motion.`;
+
+  const res=await fetch('https://fal.run/fal-ai/ltx-video/image-to-video',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Key '+FKEY.trim()},
+    body:JSON.stringify({
+      image_url:capturedB64,
+      prompt:prompt,
+      num_inference_steps:30
+    })
+  });
+  const txt=await res.text();
+  if(!res.ok)throw new Error('HTTP '+res.status+' '+txt.slice(0,120));
+  let data;try{data=JSON.parse(txt);}catch{throw new Error('risposta non valida');}
+  const url=data?.video?.url||data?.output?.video?.url||data?.outputs?.[0]?.url||data?.url;
+  if(!url)throw new Error('url mancante');
+  return url;
+}
+
+function resetAll(){
+  capturedB64=null;
+  document.getElementById('resVideo').src='';
+  showView('vCam');
+  initCam();
+}
+</script>
+</body>
+</html>
